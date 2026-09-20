@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Events Dashboard — IEEE ITB</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+  <main class="container">
+    <nav class="admin-nav">
+      <a class="nav-brand" href="dashboard.html">IEEE</a>
+      <button class="btn btn-outline btn-ghost" id="logoutBtn" type="button">Logout</button>
+    </nav>
+
+    <div class="page-header">
+      <h1>Events Dashboard</h1>
+      <a class="btn btn-outline" href="event-form.html">+ Add new event</a>
+    </div>
+
+    <section class="stats" id="statsZone">
+      <div class="stat-card glass-card"><div class="stat-label">Events Created</div><div class="stat-value">-</div></div>
+      <div class="stat-card glass-card"><div class="stat-label">Upcoming Events</div><div class="stat-value">-</div></div>
+      <div class="stat-card glass-card"><div class="stat-label">Success Events</div><div class="stat-value">-</div></div>
+    </section>
+
+    <div class="dashboard-toolbar">
+      <div class="tabs" id="filterTabs" role="group" aria-label="Filter event">
+        <button class="tab is-active" data-filter="all" type="button">All events</button>
+        <button class="tab" data-filter="upcoming" type="button">Upcoming events</button>
+        <button class="tab" data-filter="past" type="button">Past events</button>
+      </div>
+    </div>
+
+    <div class="selection-bar glass-card" id="selectionBar">
+      <span class="selection-count" id="selectionCount">0 events selected</span>
+      <button class="btn btn-danger" id="deleteSelectedBtn" type="button">Delete</button>
+      <button class="btn btn-ghost" id="clearSelectionBtn" type="button">Cancel</button>
+    </div>
+
+    <ul class="admin-list" id="eventList">
+      <li class="state-block state-loading" style="grid-column:auto; list-style:none"><div class="state-icon"></div><p class="state-msg">Memuat data...</p></li>
+    </ul>
+  </main>
+
+  <!-- Delete confirmation modal -->
+  <div class="modal-overlay" id="deleteModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal-card">
+      <h2 id="modalTitle">Delete Items</h2>
+      <p>Are you sure want to delete this event?</p>
+      <div class="modal-actions">
+        <button class="btn btn-outline" id="modalNo" type="button">No</button>
+        <button class="btn btn-dark" id="modalYes" type="button">Yes</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../js/config.js"></script>
+  <script src="../js/api.js"></script>
+  <script src="../js/shared.js"></script>
+  <script src="../js/pages/dashboard.js"></script>
+</body>
+</html>

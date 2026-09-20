@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Add Event — IEEE ITB</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+  <main class="container">
+    <nav class="admin-nav">
+      <a class="nav-brand" href="dashboard.html">IEEE</a>
+      <div class="tabs view-switch">
+        <a class="tab is-active" href="event-form.html">Add event</a>
+        <a class="tab" href="dashboard.html">Dashboard</a>
+      </div>
+      <button class="btn btn-outline btn-ghost" id="logoutBtn" type="button">Logout</button>
+    </nav>
+
+    <div class="page-header">
+      <h1 id="formTitle">Add new event</h1>
+    </div>
+
+    <div id="formContainer" class="container">
+      <form id="eventForm" class="form-card glass-card" novalidate>
+        <div class="form-grid">
+          <div class="field full">
+            <label class="field-label" for="title">Event name</label>
+            <input class="input" type="text" id="title" name="title" placeholder="Contoh: IoT Workshop 2026" maxlength="200" required>
+            <p class="field-error" id="errTitle">Event name wajib diisi.</p>
+          </div>
+
+          <div class="field">
+            <label class="field-label" for="date">Date</label>
+            <input class="input" type="date" id="date" name="date" required>
+            <p class="field-error" id="errDate">Date wajib diisi.</p>
+          </div>
+
+          <div class="field">
+            <label class="field-label" for="time">Time</label>
+            <input class="input" type="time" id="time" name="time" required>
+            <p class="field-error" id="errTime">Time wajib diisi.</p>
+          </div>
+
+          <div class="field">
+            <label class="field-label" for="location">Place</label>
+            <input class="input" type="text" id="location" name="location" placeholder="Contoh: Aula Timur ITB" maxlength="200" required>
+            <p class="field-error" id="errLocation">Place wajib diisi.</p>
+          </div>
+
+          <div class="field">
+            <label class="field-label" for="status">Status</label>
+            <select class="select" id="status" name="status">
+              <option value="upcoming">Upcoming</option>
+              <option value="ongoing">Ongoing</option>
+              <option value="past">Past</option>
+            </select>
+            <p class="field-error" id="errStatus">Status tidak valid.</p>
+          </div>
+
+          <div class="field full">
+            <label class="field-label" for="image_url">Image URL <span style="opacity:.6;font-weight:400">(opsional)</span></label>
+            <input class="input" type="url" id="image_url" name="image_url" placeholder="https://..." maxlength="500">
+            <p class="field-error" id="errImage">URL gambar tidak valid.</p>
+          </div>
+
+          <div class="field full">
+            <label class="field-label" for="description">Event Description</label>
+            <textarea class="textarea" id="description" name="description" placeholder="Jelaskan detail event..." maxlength="5000" required></textarea>
+            <p class="field-error" id="errDescription">Description minimal 10 karakter.</p>
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <button class="btn btn-outline" type="submit" id="submitBtn">Add event</button>
+          <a class="btn btn-ghost" href="dashboard.html">Cancel</a>
+        </div>
+      </form>
+    </div>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../js/config.js"></script>
+  <script src="../js/api.js"></script>
+  <script src="../js/shared.js"></script>
+  <script src="../js/pages/event-form.js"></script>
+</body>
+</html>
