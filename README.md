@@ -126,8 +126,6 @@ All database setup is done in **Supabase Dashboard → SQL Editor**. Run these f
 - `status` must be one of: `upcoming`, `ongoing`, `past`
 - RLS: public read, admin-only write
 
----
-
 ## 6.2 Creating an Admin Account
 
 For security reasons, **there is no built-in demo account**. Each environment must create its own.
@@ -187,8 +185,6 @@ select id, 'admin', 'admin' from auth.users limit 1;
 - **No automated tests** — no test framework or test suite included
 - **No CI/CD**
 - **RLS intentionally allows public read** — do not store sensitive data in the `events` table
-
----
 
 ## 8.1 Possible Future Improvements
 
