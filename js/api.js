@@ -53,6 +53,32 @@
     }
   };
 
+  // ------------------------------- STORAGE ---------------------------------
+  // Uploads an image file to the "event-images" Supabase Storage bucket and
+  // returns the public URL. Requires the storage set-up in supabase/storage.sql.
+  app.uploadEventImage = async function (file, eventId) {
+    try {
+      var sb = client();
+      var safeExt = (file.name.split('.').pop() || 'jpg').toLowerCase().replace(/[^a-z0-9]/g, '');
+      var fileName = (eventId || 'event') + '-' + Date.now() + '.' + safeExt;
+
+      var res = await sb.storage.from('event-images').upload(fileName, file, {
+        contentType: file.type || 'application/octet-stream',
+        upsert: false
+      });
+      if (res.error) {
+        if (/storage|bucket|policy|permission/i.test(res.error.message)) {
+          return { error: 'Upload failed: storage bucket/policy is not set up. Run supabase/storage.sql in the SQL Editor' };
+        }
+        return { error: 'Image upload failed: ' + friendlyError(res.error) };
+      }
+      var url = sb.storage.from('event-images').getPublicUrl(res.data.path).data.publicUrl;
+      return { url: url };
+    } catch (e) {
+      return { error: 'Image upload failed: ' + (e && e.message ? e.message : 'an unexpected error occurred') };
+    }
+  };
+
   app.signIn = async function (email, password) {
     try {
       var res = await client().auth.signInWithPassword({ email: email, password: password });
@@ -189,15 +215,15 @@
 
   // Shared client-side validation (mirrors the DB constraints / check rules).
   app.validateEvent = function (ev) {
-    if (!ev.title || !ev.title.trim()) return { error: 'Event name wajib diisi.' };
+    if (!ev.title || !ev.title.trim()) return { error: 'Event name is required' };
     if (!ev.description || ev.description.trim().length < 10) {
-      return { error: 'Description minimal 10 karakter.' };
+      return { error: 'Description must be at least 10 characters' };
     }
-    if (!ev.date) return { error: 'Date wajib diisi.' };
-    if (!ev.time) return { error: 'Time wajib diisi.' };
-    if (!ev.location || !ev.location.trim()) return { error: 'Place wajib diisi.' };
+    if (!ev.date) return { error: 'Date is required' };
+    if (!ev.time) return { error: 'Time is required' };
+    if (!ev.location || !ev.location.trim()) return { error: 'Place is required' };
     if (!ev.status || ['upcoming', 'ongoing', 'past'].indexOf(ev.status) === -1) {
-      return { error: 'Status tidak valid.' };
+      return { error: 'Status is invalid' };
     }
     return { error: null };
   };

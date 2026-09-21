@@ -11,16 +11,14 @@
   });
 
   function init() {
-    document.getElementById('logoutBtn').addEventListener('click', function () {
-      app.signOut().then(function () {
-        window.location.replace('login.html');
-      });
-    });
-
     var form = document.getElementById('eventForm');
     var submitBtn = document.getElementById('submitBtn');
     var formTitle = document.getElementById('formTitle');
     var editId = app.getParam('id');
+
+    var fileInput = document.getElementById('image_file');
+    var fileError = document.getElementById('errImageFile');
+    var preview = document.getElementById('imagePreview');
 
     if (editId) {
       formTitle.textContent = 'Edit event';
@@ -28,6 +26,16 @@
       form.classList.add('is-hidden');
       loadEvent(editId);
     }
+
+    fileInput.addEventListener('change', function () {
+      clearFileError();
+      var file = fileInput.files && fileInput.files[0];
+      if (!file) {
+        preview.innerHTML = '';
+        return;
+      }
+      preview.innerHTML = '<img src="' + URL.createObjectURL(file) + '" alt="Pratinjau gambar">';
+    });
 
     bindClear('title', 'errTitle');
     bindClear('date', 'errDate');
@@ -41,11 +49,30 @@
       e.preventDefault();
       var values = readValues();
       var validation = app.validateEvent(values);
-      if (validation.error && !showFieldErrors(values)) {
-        app.toast(validation.error, 'error');
-        return;
-      }
+      var anyShown = showFieldErrors(values);
+      if (validation.error || anyShown) return;
 
+      var file = fileInput.files && fileInput.files[0];
+      if (file) persistWithUpload(values, file);
+      else persist(values);
+    });
+
+    function persistWithUpload(values, file) {
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = '<span class="spinner"></span> Uploading...';
+      app.uploadEventImage(file, editId || 'event').then(function (res) {
+        if (res.error) {
+          submitBtn.disabled = false;
+          submitBtn.textContent = editId ? 'Save changes' : 'Add event';
+          markFileError(res.error);
+          return;
+        }
+        values.image_url = res.url;
+        persist(values);
+      });
+    }
+
+    function persist(values) {
       submitBtn.disabled = true;
       submitBtn.innerHTML = '<span class="spinner"></span> Saving...';
 
@@ -60,7 +87,18 @@
         sessionStorage.setItem('appToast', (editId ? 'Event updated.' : 'Event added.') + '|success');
         window.location.replace('dashboard.html');
       });
-    });
+    }
+
+    function markFileError(msg) {
+      fileError.textContent = msg || 'Something went wrong while uploading the image';
+      fileError.classList.add('show');
+      fileInput.classList.add('has-error');
+    }
+
+    function clearFileError() {
+      fileError.classList.remove('show');
+      fileInput.classList.remove('has-error');
+    }
 
     function loadEvent(id) {
       var loadingZone = document.getElementById('formLoading');
@@ -86,6 +124,9 @@
       document.getElementById('status').value = ev.status || 'upcoming';
       document.getElementById('image_url').value = ev.image_url || '';
       document.getElementById('description').value = ev.description || '';
+      fileInput.value = '';
+      clearFileError();
+      preview.innerHTML = '';
     }
 
     function readValues() {

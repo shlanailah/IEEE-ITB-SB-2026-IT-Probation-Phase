@@ -10,17 +10,9 @@
   <link rel="stylesheet" href="../css/style.css">
 </head>
 <body>
-  <main class="container">
-    <nav class="admin-nav">
-      <a class="nav-brand" href="dashboard.html">IEEE</a>
-      <div class="tabs view-switch">
-        <a class="tab is-active" href="event-form.html">Add event</a>
-        <a class="tab" href="dashboard.html">Dashboard</a>
-      </div>
-      <button class="btn btn-outline btn-ghost" id="logoutBtn" type="button">Logout</button>
-    </nav>
-
-    <div class="page-header">
+  <main class="page container detail-page">
+    <div class="detail-top">
+      <a class="round-btn" href="dashboard.html" aria-label="Kembali ke dashboard">&#8249;</a>
       <h1 id="formTitle">Add new event</h1>
     </div>
 
@@ -31,25 +23,25 @@
           <div class="field full">
             <label class="field-label" for="title">Event name</label>
             <input class="input" type="text" id="title" name="title" placeholder="Contoh: IoT Workshop 2026" maxlength="200" required>
-            <p class="field-error" id="errTitle">Event name wajib diisi.</p>
+            <p class="field-error" id="errTitle">Event name is required</p>
           </div>
 
           <div class="field">
             <label class="field-label" for="date">Date</label>
             <input class="input" type="date" id="date" name="date" required>
-            <p class="field-error" id="errDate">Date wajib diisi.</p>
+            <p class="field-error" id="errDate">Date is required</p>
           </div>
 
           <div class="field">
             <label class="field-label" for="time">Time</label>
             <input class="input" type="time" id="time" name="time" required>
-            <p class="field-error" id="errTime">Time wajib diisi.</p>
+            <p class="field-error" id="errTime">Time is required</p>
           </div>
 
           <div class="field">
             <label class="field-label" for="location">Place</label>
             <input class="input" type="text" id="location" name="location" placeholder="Contoh: Aula Timur ITB" maxlength="200" required>
-            <p class="field-error" id="errLocation">Place wajib diisi.</p>
+            <p class="field-error" id="errLocation">Place is required</p>
           </div>
 
           <div class="field">
@@ -59,19 +51,26 @@
               <option value="ongoing">Ongoing</option>
               <option value="past">Past</option>
             </select>
-            <p class="field-error" id="errStatus">Status tidak valid.</p>
+            <p class="field-error" id="errStatus">Status is invalid</p>
           </div>
 
           <div class="field full">
-            <label class="field-label" for="image_url">Image URL <span style="opacity:.6;font-weight:400">(opsional)</span></label>
+            <label class="field-label" for="image_url">Image URL <span class="hint">(opsional)</span></label>
             <input class="input" type="url" id="image_url" name="image_url" placeholder="https://..." maxlength="500">
-            <p class="field-error" id="errImage">URL gambar tidak valid.</p>
+            <p class="field-error" id="errImage">Image URL is invalid</p>
+          </div>
+
+          <div class="field full">
+            <label class="field-label" for="image_file">Upload Image File <span class="hint">(opsional)</span></label>
+            <input class="input file-input" type="file" id="image_file" name="image_file" accept="image/png,image/jpeg,image/webp,image/gif">
+            <p class="field-error" id="errImageFile">The image upload failed</p>
+            <div class="file-preview" id="imagePreview"></div>
           </div>
 
           <div class="field full">
             <label class="field-label" for="description">Event Description</label>
             <textarea class="textarea" id="description" name="description" placeholder="Jelaskan detail event..." maxlength="5000" required></textarea>
-            <p class="field-error" id="errDescription">Description minimal 10 karakter.</p>
+            <p class="field-error" id="errDescription">Description must be at least 10 characters</p>
           </div>
         </div>
 

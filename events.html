@@ -7,7 +7,17 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="preload" href="css/style.css" as="style">
   <link rel="stylesheet" href="css/style.css">
+  <script>
+    document.documentElement.classList.add('page-fade');
+  </script>
+  <noscript><style>html.page-fade body { opacity: 1; }</style></noscript>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
+  <script src="js/config.js" defer></script>
+  <script src="js/api.js" defer></script>
+  <script src="js/shared.js" defer></script>
+  <script src="js/pages/events-page.js" defer></script>
 </head>
 <body>
   <div id="navbar"></div>
@@ -16,22 +26,27 @@
     <h1 class="section-title center">Events</h1>
 
     <section class="section">
-      <h2 class="section-title">Upcoming Events</h2>
-      <div id="upcomingZone" class="car"></div>
-    </section>
+      <div class="events-toolbar glass-card">
+        <div class="search-field">
+        <svg class="search-icon" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
+          <path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M21 21l-4.35-4.35M11 19a8 8 0 1 1 8-8 8 8 0 0 1-8 8z"/>
+        </svg>
+        <input class="input" type="search" id="searchInput" placeholder="Search event by name, place, or description..."
+          aria-label="Search events">
+      </div>
+        <div class="tabs" id="filterTabs" role="group" aria-label="Filter events">
+          <button class="tab is-active" data-filter="all" type="button">All events</button>
+          <button class="tab" data-filter="upcoming" type="button">Upcoming</button>
+          <button class="tab" data-filter="past" type="button">Past</button>
+        </div>
+      </div>
 
-    <section class="section">
-      <h2 class="section-title">Past Events</h2>
-      <div id="pastZone" class="car"></div>
+      <div id="eventsZone" class="events-grid" aria-live="polite"></div>
+
+      <nav class="pagination" id="pagination" aria-label="Pagination"></nav>
     </section>
   </main>
 
   <div id="footer"></div>
-
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="js/config.js"></script>
-  <script src="js/api.js"></script>
-  <script src="js/shared.js"></script>
-  <script src="js/pages/events-page.js"></script>
 </body>
 </html>

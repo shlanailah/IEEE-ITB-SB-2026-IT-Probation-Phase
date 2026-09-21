@@ -333,4 +333,54 @@
     window.addEventListener('resize', measure);
     measure();
   };
+
+  // ------------------------ Page transitions (fade) ---------------------------
+  var REDUCED_MOTION = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+  var TRANSITION_MS = 260;
+
+  // Fade the page in after everything (fonts/images) finished loading.
+  // The double requestAnimationFrame guarantees an opacity:0 frame is painted
+  // first so the CSS transition actually animates instead of jumping to 1.
+  window.addEventListener('load', function () {
+    requestAnimationFrame(function () {
+      requestAnimationFrame(function () {
+        document.documentElement.classList.remove('page-fade');
+      });
+    });
+  });
+
+  // True when a link should use the fade transition: an internal relative
+  // navigation to another .html page on the same origin.
+  app.isSmoothLink = function (a) {
+    var href = a.getAttribute('href');
+    if (!href || a.hasAttribute('download')) return false;
+
+    var target = (a.getAttribute('target') || '').toLowerCase();
+    if (target && target !== '_self') return false;
+
+    var rel = (a.getAttribute('rel') || '').split(/\s+/);
+    if (rel.indexOf('external') !== -1) return false;
+
+    if (a.origin && a.origin !== window.location.origin) return false;
+    return /\.html(\?|#|$)/.test(href);
+  };
+
+  // Intercept internal link clicks: fade out first, then navigate.
+  document.addEventListener('click', function (e) {
+    if (e.defaultPrevented || e.button !== 0) return;
+    if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+    if (REDUCED_MOTION) return;
+    if (document.documentElement.classList.contains('page-leaving')) return;
+
+    var target = e.target;
+    var link = target && target.closest ? target.closest('a[href]') : null;
+    if (!link || !app.isSmoothLink(link)) return;
+
+    var dest = link.href;
+    e.preventDefault();
+    document.documentElement.classList.add('page-leaving');
+    setTimeout(function () {
+      window.location.href = dest;
+    }, TRANSITION_MS);
+  });
 })();

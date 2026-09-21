@@ -21,14 +21,14 @@ Public pages:
 
 - **Home** (`index.html`) — hero + *Upcoming Events* carousel. Instant render from a sessionStorage cache when available (shimmer skeleton on first paint), then silently refreshes.
 - **About** (`about.html`) — short profile of the organization.
-- **Events** (`events.html`) — two carousels: *Upcoming* and *Past*.
+- **Events** (`events.html`) — event list with **search** (name / place / description), **status filter tabs** (All / Upcoming / Past), and **pagination**.
 - **Event Detail** (`event-detail.html?id=...`) — date, time, location, description, and event image.
 
 Admin pages (`admin/`):
 
 - **Login** (`login.html`) — email/password authentication via Supabase Auth, with form validation and friendly error messages.
 - **Dashboard** (`dashboard.html`) — statistics (total / upcoming / past), filter tabs (All / Upcoming / Past), and per-event delete via a trash icon button that opens a neutral confirmation popup.
-- **Event Form** (`event-form.html`) — add a new event or edit an existing one (`?id=` for edit), with per-field validation and toast feedback.
+- **Event Form** (`event-form.html`) — add a new event or edit an existing one (`?id=` for edit), with per-field validation, toast feedback, and a back button instead of the admin navbar. Image source can be an **external URL or a direct file upload** (max 5MB) stored in the Supabase `event-images` Storage bucket.
 
 Backend & system:
 
@@ -123,6 +123,7 @@ Full setup using the Supabase SQL Editor (run in order, once):
 1. Open **Supabase Dashboard → SQL Editor**.
 2. Run **`supabase/schema.sql`** — creates `public.profiles` & `public.events`, the `updated_at` trigger, and all RLS policies plus the `public.is_admin()` function.
 3. Run **`supabase/seed.sql`** — inserts 6 sample events (3 upcoming, 3 past) with dates relative to `current_date`. Seed is **idempotent**: re-running it skips existing events thanks to the unique `events_dedup_idx` on `(title, date, time, location)`, so events never appear twice.
+4. Run **`supabase/storage.sql`** (once) — creates the public `event-images` Storage bucket and its policies (public read, admin-only write) used by the image file upload in the event form.
 
 Schema summary:
 
@@ -155,7 +156,7 @@ To prepare an evaluator account:
 - **No search or pagination** — all events are fetched at once; not ideal for very large datasets.
 - **Home caching** — the Home page uses sessionStorage for 5 minutes; data can appear slightly stale after an admin change.
 - **Hardcoded timezone** — time is displayed as `... WIB` on the detail page without conversion to the visitor's timezone.
-- **Images via external URLs** — no upload/Storage via Supabase Storage; broken images fall back to a placeholder.
+- **Cover images** — support both external URLs and Supabase Storage uploads; broken external URLs fall back to a placeholder. Upload requires the `supabase/storage.sql` set-up to have been run.
 - **No demo account** — admin creation requires manual steps in the Supabase Dashboard + SQL.
 - **No automated tests** (`test.sql` / `tes.js` are still stubs) and no CI/CD.
 - RLS intentionally allows **everyone to read** event data (for the public pages); avoid storing sensitive data in that table.
