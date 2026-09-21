@@ -1,8 +1,3 @@
-/* ============================================================================
-   IEEE ITB Student Branch — Design System
-   Dark glassmorphism, navy -> teal gradient, Poppins.
-   ========================================================================= */
-
 :root {
   --navy-900: #0a1929;
   --navy-700: #173a52;
@@ -35,11 +30,6 @@ body {
   margin: 0;
   font-family: var(--font);
   color: var(--text);
-  /*background:
-    radial-gradient(1100px 760px at 88% -12%, rgba(122, 178, 214, 0.20), transparent 62%),
-    radial-gradient(900px 720px at 6% 14%, rgba(43, 95, 126, 0.55), transparent 68%),
-    linear-gradient(158deg, #0a1929 0%, #173a52 46%, #2b5f7e 100%);
-  background-attachment: fixed;*/
   min-height: 100vh;
   line-height: 1.55;
   -webkit-font-smoothing: antialiased;
@@ -82,7 +72,7 @@ button { font-family: inherit; cursor: pointer; }
 .home-main { padding-bottom: 72px; }
 
 /* --------------------------------------------------------------------------
-   NAVBAR (floating rounded glass pill)
+   NAVBAR 
    -------------------------------------------------------------------------- */
 .nav-wrap {
   position: sticky;

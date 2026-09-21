@@ -1,162 +1,210 @@
-# IEEE ITB Student Branch — Event Website
-
-Profile website for the **IEEE ITB Student Branch** for publishing and managing events, built with **HTML + CSS + JavaScript (vanilla)** and **Supabase** as the backend (Postgres, Auth, and access control through Row Level Security). Built as the deliverable for the IT Probation Phase 2026.
+This is a website to publish and manage organizational events. Built with **HTML + CSS + vanilla JavaScript** and **Supabase** as the backend (database, authentication, and access control). Created as the deliverable for **IEEE ITB SB IT Probation Phase 2026**.
 
 ---
 
-## 1. Project Overview
+## What Can This Website Do?
 
-A two-sided web application:
+The site has **two sides**:
 
-- **Public pages** — display upcoming & past event lists as carousels, plus a detail page for each event. No login required.
-- **Admin pages** — secure login to manage (add, edit, delete) events through a dashboard.
+### Public Side (no login required)
 
-All data is stored in Supabase. Validation happens at two layers: **client-side** (form & feedback) and **server-side** (CHECK constraints, triggers, and RLS policies).
+- **Home**: landing page with a hero section and an *Upcoming Events* carousel
+- **About**: a short profile of the organization
+- **Events**: full event list with:
+  - Search (by name, place, or description)
+  - Filter tabs (All / Upcoming / Past)
+  - Pagination to split the list into multiple pages
+- **Event Detail**: full event info (date, time, location, description, image)
 
----
+### Admin Side (login required)
 
-## 2. Completed Features
-
-Public pages:
-
-- **Home** (`index.html`) — hero + *Upcoming Events* carousel. Instant render from a sessionStorage cache when available (shimmer skeleton on first paint), then silently refreshes.
-- **About** (`about.html`) — short profile of the organization.
-- **Events** (`events.html`) — event list with **search** (name / place / description), **status filter tabs** (All / Upcoming / Past), and **pagination**.
-- **Event Detail** (`event-detail.html?id=...`) — date, time, location, description, and event image.
-
-Admin pages (`admin/`):
-
-- **Login** (`login.html`) — email/password authentication via Supabase Auth, with form validation and friendly error messages.
-- **Dashboard** (`dashboard.html`) — statistics (total / upcoming / past), filter tabs (All / Upcoming / Past), and per-event delete via a trash icon button that opens a neutral confirmation popup.
-- **Event Form** (`event-form.html`) — add a new event or edit an existing one (`?id=` for edit), with per-field validation, toast feedback, and a back button instead of the admin navbar. Image source can be an **external URL or a direct file upload** (max 5MB) stored in the Supabase `event-images` Storage bucket.
-
-Backend & system:
-
-- `profiles` (admin) and `events` tables in Postgres/Supabase.
-- **Row Level Security (RLS)**: anyone can *read* events; only authenticated admins can *write* (insert/update/delete).
-- `NOT NULL` + `CHECK` constraints and an automatic `updated_at` trigger.
-- Complete UI states: loading (skeleton/spinner), empty, error + retry, and toast notifications.
-- Responsive UI: carousel shows 2 cards per slide (desktop) / 1 card (mobile); navbar & footer are injected automatically via JS.
+- **Login**: sign in with email & password
+- **Dashboard**: event stats (total / upcoming / past), filter tabs, and delete event
+- **Event Form**: add a new event or edit an existing one, with validation, toast feedback, and image upload (max 5MB)
 
 ---
 
-## 3. Architecture
+## How It Works (Short Version)
 
-A simple layered architecture without frameworks, everything exposed through the global `window.app`:
+This website **does not have its own server**. All data lives in **Supabase** (a free hosted database service). Here's the flow:
+
+1. The HTML page loads scripts from a CDN
+2. Those scripts fetch/send data to Supabase
+3. Supabase stores the data in a **Postgres** database
+4. Security rules (**Row Level Security**) make sure only admins can add/edit/delete events
+
+Validation runs on **two layers**: in the browser (so users get instant feedback) and on the server (to prevent tampering).
+
+---
+
+## Tech Stack
+
+| Technology | Purpose |
+|---|---|
+| **HTML + CSS** | Page structure and design |
+| **Vanilla JavaScript** | Browser-side logic — no framework, lightweight and easy to read |
+| **Supabase** | Database, authentication, and security rules |
+| **supabase-js v2** | Official Supabase library, loaded via CDN |
+
+**No installs required.** No build step, no `npm install`, no bundler. Just open it in a browser.
+
+---
+
+## Running It Locally
+
+### Requirements
+
+- A [Supabase](https://supabase.com) account 
+- Node.js (optional, only if you want to use `npx serve`)
+
+### Steps
+
+**1. Download / clone this project**, then open the folder.
+
+**2. Set up Supabase** (see the [Database Setup](#database-setup) section below).
+
+**3. Fill in your credentials** in `js/config.js`:
+
+```js
+window.SUPABASE_URL = 'https://<project-ref>.supabase.co';
+window.SUPABASE_ANON_KEY = '<anon-key>';
+```
+
+**4. Run a local server** (pick one):
+
+```bash
+npx serve .
+```
+
+Or open `index.html` directly in a browser (Live Server in VS Code works too).
+
+**5. Open the pages:**
+
+- Public → `http://localhost:3000/`
+- Admin → `http://localhost:3000/admin/login.html`
+
+---
+
+## Database Setup
+
+All database setup is done in **Supabase Dashboard → SQL Editor**. Run these files **in order, one time only**:
+
+| Order | File | Purpose |
+|---|---|---|
+| 1 | `supabase/schema.sql` | Creates the `profiles` & `events` tables, triggers, and RLS policies |
+| 2 | `supabase/seed.sql` | Inserts 6 sample events (3 upcoming, 3 past) — safe to re-run, won't duplicate |
+| 3 | `supabase/storage.sql` | Creates the `event-images` storage bucket for image uploads |
+
+### Table Overview
+
+**`profiles`** — admin data:
+
+- `id`, `username`, `role`, `created_at`
+- RLS: public read, owner-only write
+
+**`events`** — event data:
+
+- `id`, `title`, `description`, `date`, `time`, `location`, `status`, `image_url`, `created_at`, `updated_at`
+- `status` must be one of: `upcoming`, `ongoing`, `past`
+- RLS: public read, admin-only write
+
+---
+
+## Creating an Admin Account
+
+For security reasons, **there is no built-in demo account**. Each environment must create its own.
+
+**1. Create a user in Supabase:**
+
+- Go to **Supabase Dashboard → Authentication → Users → Add User**
+- Enter an email & password (minimum 6 characters)
+- If email confirmation is enabled, confirm the email first
+
+**2. Register the user as admin** — run in the SQL Editor:
+
+```sql
+insert into public.profiles (id, username, role)
+select id, 'admin', 'admin' from auth.users limit 1;
+```
+
+**3. Log in** at `admin/login.html` with that email & password.
+
+---
+
+## Project Structure
 
 ```
-Static HTML shell
-   └─ js/config.js        Configuration: SUPABASE_URL + SUPABASE_ANON_KEY
-        └─ js/api.js      Data layer: Supabase client wrapper (auth + events CRUD)
-             └─ js/shared.js   Shared UI: navbar/footer, toast, states, carousel, templates
-                  └─ js/pages/*.js   Per-page controllers
-                        └─ Supabase (Postgres + Auth + RLS)
+├── index.html              Home page (public)
+├── about.html              About page (public)
+├── events.html             Events list page (public)
+├── event-detail.html       Event detail page (public)
+│
+├── admin/                  Admin-only pages
+│   ├── login.html
+│   ├── dashboard.html
+│   └── event-form.html
+│
+├── css/
+│   └── style.css           All styling (dark glassmorphism, navy-teal)
+│
+├── js/
+│   ├── config.js           Supabase credentials
+│   ├── api.js              Supabase wrapper (auth + CRUD)
+│   ├── shared.js           Shared components (navbar, footer, toast, carousel)
+│   └── pages/              Per-page controllers
+│
+└── supabase/
+    ├── schema.sql          Database schema + RLS
+    ├── seed.sql            Sample data
+    └── storage.sql         Image bucket setup
 ```
 
-Data flow:
-
-1. Each HTML page loads the `@supabase/supabase-js` CDN, then `config.js → api.js → shared.js → pages/<page>.js`.
-2. The page controller calls functions on `app` (e.g. `app.listEvents('upcoming')`) to fetch/mutate data.
-3. `api.js` translates Supabase errors into friendly messages.
-4. Admin pages are protected by `app.requireAdmin()` (redirects to login when there is no session); on the server side, RLS blocks non-admin writes as a second security layer.
-
-The full database schema and RLS policies live in `supabase/schema.sql`; sample data is in `supabase/seed.sql`.
-
 ---
 
-## 4. Tech Stack & Rationale
+## Environment Configuration
 
-| Technology | Role | Rationale |
-| --- | --- | --- |
-| **HTML5 + CSS3** | Structure & design | Semantic, no build step. Custom design system (dark glassmorphism, navy–teal gradient, Poppins font) in `css/style.css`. |
-| **JavaScript (vanilla)** | Frontend logic | No framework and no runtime dependencies — easy to evaluate and fast to load in the browser. |
-| **Supabase** (Postgres, Auth, RLS) | Backend | Hosted Postgres + email/password auth + RLS policies provide server-side validation and security without running your own backend server. |
-| **supabase-js v2** (jsDelivr CDN) | Supabase client | Official, stable, loaded directly from the HTML page. |
-| **`npx serve` / Live Server** | Local static server | `serve.json` (`cleanUrls=false`) is included for consistent path resolution. |
-
-No bundler, no `package.json`, no transpilation — just open it in a browser or serve it from any static web server.
-
----
-
-## 5. Local Setup & Run
-
-Prerequisites: a [Supabase](https://supabase.com) account (free tier) and Node.js (only for `npx serve` — optional).
-
-1. **Clone and open the project folder.**
-2. **Prepare Supabase** (see sections 6 & 7): create a project, run `schema.sql` then `seed.sql`, and fill in the credentials.
-3. **Fill in the configuration** in `js/config.js`:
-   ```js
-   window.SUPABASE_URL = 'https://<project-ref>.supabase.co';
-   window.SUPABASE_ANON_KEY = '<anon-key>';
-   ```
-4. **Run a local server** (choose one):
-   ```bash
-   npx serve .            # default port 3000; uses serve.json
-   ```
-   or open `index.html` directly (via VS Code Live Server / browser). A local server is recommended so paths and the CDN behave consistently.
-
-5. Open the pages:
-   - Public: `http://localhost:3000/`
-   - Admin: `http://localhost:3000/admin/login.html`
-
----
-
-## 6. Required Environment Variables
-
-A template is available in **`.env.example`** (no secrets):
+There is a **`.env.example`** file as a template (no sensitive data):
 
 ```
 SUPABASE_URL=
 SUPABASE_ANON_KEY=
 ```
 
-> Note: because this is a **static frontend with no build step**, the `SUPABASE_URL` and `SUPABASE_ANON_KEY` variables are NOT read from a `.env` file at runtime — they are pasted directly into `js/config.js`. The `.env.example` file documents the required variables.
+> **Important:** since this is a static frontend with no build step, `.env` variables are **not read automatically at runtime**. You still need to paste the values manually into `js/config.js`. The `.env.example` file is only for documentation.
 
-**Important:** use the **anon/publishable key** (safe for frontends — data access is restricted by RLS). **Never** use the `service_role` key in the frontend.
+**Things to remember:**
 
----
-
-## 7. Database Setup
-
-Full setup using the Supabase SQL Editor (run in order, once):
-
-1. Open **Supabase Dashboard → SQL Editor**.
-2. Run **`supabase/schema.sql`** — creates `public.profiles` & `public.events`, the `updated_at` trigger, and all RLS policies plus the `public.is_admin()` function.
-3. Run **`supabase/seed.sql`** — inserts 6 sample events (3 upcoming, 3 past) with dates relative to `current_date`. Seed is **idempotent**: re-running it skips existing events thanks to the unique `events_dedup_idx` on `(title, date, time, location)`, so events never appear twice.
-4. Run **`supabase/storage.sql`** (once) — creates the public `event-images` Storage bucket and its policies (public read, admin-only write) used by the image file upload in the event form.
-
-Schema summary:
-
-- **`profiles`** — `id (PK → auth.users)`, `username`, `role` (`'admin'`), `created_at`. RLS: public read, owner-only write.
-- **`events`** — `id (PK)`, `title`, `description`, `date`, `time`, `location`, `status` (`upcoming|ongoing|past`), `image_url` (optional), `created_at`, `updated_at`. `NOT NULL` + `CHECK` constraints (text length, status enum). RLS: public read; insert/update/delete only when `public.is_admin()`.
-
-> `supabase/test.sql` and `js/tes.js` are empty stubs — not implemented yet.
+- Use the **anon / publishable key**, safe for frontends, access is restricted by RLS
+- **Never** use the `service_role` key in the frontend
 
 ---
 
-## 8. Evaluator / Demo Account Credentials
+## Known Limitations
 
-**No ready-made demo account** — for security, each environment should create its own admin account.
+Things that are **not yet implemented**:
 
-To prepare an evaluator account:
-
-1. Open **Supabase Dashboard → Authentication → Users → Add user**. Create an email + password (min. 6 characters). If email confirmation is enabled, confirm the email first.
-2. Link the user as an admin — run in the SQL Editor (once per admin user):
-   ```sql
-   insert into public.profiles (id, username, role)
-   select id, 'admin', 'admin' from auth.users limit 1;
-   ```
-3. Log in at `admin/login.html` with that email & password.
+- **No backend pagination** — all events are fetched at once, not ideal for large datasets
+- **Home cache of 5 minutes** — data may appear slightly stale after an admin change
+- **Hardcoded timezone** — time is displayed as `WIB` without converting to the visitor's timezone
+- **No automated tests** — `test.sql` and `tes.js` are still empty stubs
+- **No CI/CD**
+- **RLS intentionally allows public read** — do not store sensitive data in the `events` table
 
 ---
 
-## 9. Known Issues & Limitations
+## Possible Future Improvements
 
-- **No real env configuration** — Supabase credentials are written directly in `js/config.js` (including a project URL/anon key from the developer's project that is already committed). For your own environment, replace them with your project's values.
-- **No search or pagination** — all events are fetched at once; not ideal for very large datasets.
-- **Home caching** — the Home page uses sessionStorage for 5 minutes; data can appear slightly stale after an admin change.
-- **Hardcoded timezone** — time is displayed as `... WIB` on the detail page without conversion to the visitor's timezone.
-- **Cover images** — support both external URLs and Supabase Storage uploads; broken external URLs fall back to a placeholder. Upload requires the `supabase/storage.sql` set-up to have been run.
-- **No demo account** — admin creation requires manual steps in the Supabase Dashboard + SQL.
-- **No automated tests** (`test.sql` / `tes.js` are still stubs) and no CI/CD.
-- RLS intentionally allows **everyone to read** event data (for the public pages); avoid storing sensitive data in that table.
+Ideas for extending the project:
+
+- Event search (already in UI, can be strengthened)
+- Upcoming/Past filtering (already there, can add sorting)
+- Server-side pagination (Supabase `.range()`)
+- Image upload (already there, can add compression/crop)
+- Improved authentication handling (session refresh, guards, etc.)
+- Reusable API/service layer (centralize all Supabase calls)
+
+---
+
+## License & Contribution
+
+This project was built for **IT Probation Phase 2026** at IEEE ITB Student Branch.

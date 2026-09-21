@@ -2,6 +2,7 @@
   'use strict';
 
   document.addEventListener('DOMContentLoaded', function () {
+    app.renderFooter();
     app.requireAdmin('login.html').then(function (session) {
       if (session) {
         showFlashToast();

@@ -6,9 +6,7 @@
       app.toast('Supabase is not configured. Please fill in js/config.js.', 'error');
     }
 
-    app.getSession().then(function (session) {
-      if (session) window.location.replace('dashboard.html');
-    });
+    app.renderFooter();
 
     var form = document.getElementById('loginForm');
     var email = document.getElementById('email');

@@ -12,7 +12,7 @@
     var backBtn = document.getElementById('backBtn');
     if (backBtn) {
       var isAdmin = app.getParam('from') === 'admin';
-      backBtn.href = isAdmin ? '../admin/dashboard.html' : 'events.html';
+      backBtn.href = isAdmin ? 'admin/dashboard.html' : 'events.html';
       backBtn.setAttribute('aria-label', isAdmin ? 'Back to dashboard' : 'Back to event list');
     }
 
