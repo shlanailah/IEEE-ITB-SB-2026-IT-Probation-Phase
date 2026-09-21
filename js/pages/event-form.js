@@ -19,6 +19,8 @@
     var fileInput = document.getElementById('image_file');
     var fileError = document.getElementById('errImageFile');
     var preview = document.getElementById('imagePreview');
+    var dateInput = document.getElementById('date');
+    var statusSelect = document.getElementById('status');
 
     if (editId) {
       formTitle.textContent = 'Edit event';
@@ -35,6 +37,11 @@
         return;
       }
       preview.innerHTML = '<img src="' + URL.createObjectURL(file) + '" alt="Pratinjau gambar">';
+    });
+
+    dateInput.addEventListener('change', function () {
+      var s = statusFromDate(dateInput.value);
+      if (s) statusSelect.value = s;
     });
 
     bindClear('title', 'errTitle');
@@ -84,7 +91,7 @@
           app.toast(res.error, 'error');
           return;
         }
-        sessionStorage.setItem('appToast', (editId ? 'Event updated.' : 'Event added.') + '|success');
+        sessionStorage.setItem('appToast', (editId ? 'Event updated.' : 'Event added.') + '|info');
         window.location.replace('dashboard.html');
       });
     }
@@ -121,12 +128,26 @@
       document.getElementById('date').value = ev.date || '';
       document.getElementById('time').value = (ev.time || '').slice(0, 5);
       document.getElementById('location').value = ev.location || '';
-      document.getElementById('status').value = ev.status || 'upcoming';
+      statusSelect.value = statusFromDate(ev.date || '') || ev.status || 'upcoming';
       document.getElementById('image_url').value = ev.image_url || '';
       document.getElementById('description').value = ev.description || '';
       fileInput.value = '';
       clearFileError();
       preview.innerHTML = '';
+    }
+
+    function toISODate(d) {
+      var m = d.getMonth() + 1;
+      var day = d.getDate();
+      return d.getFullYear() + '-' + (m < 10 ? '0' + m : m) + '-' + (day < 10 ? '0' + day : day);
+    }
+
+    function statusFromDate(dateStr) {
+      if (!dateStr) return null;
+      var today = toISODate(new Date());
+      if (dateStr < today) return 'past';
+      if (dateStr === today) return 'ongoing';
+      return 'upcoming';
     }
 
     function readValues() {

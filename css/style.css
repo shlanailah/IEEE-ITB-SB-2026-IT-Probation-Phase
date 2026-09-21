@@ -167,8 +167,8 @@ button { font-family: inherit; cursor: pointer; }
 .site-footer {
   width: 100%;
   display: flex;
-  align-items: center;
-  justify-content: center;
+  align-items: left;
+  justify-content: left;
   flex-wrap: wrap;
   gap: 8px;
   padding: 18px 24px;
@@ -176,8 +176,16 @@ button { font-family: inherit; cursor: pointer; }
   background: #61A5C2;
 }
 
-.footer-brand { font-weight: 800; font-size: 1.05rem; color: #ffffff; letter-spacing: 0.04em; }
-.footer-name { font-weight: 600; font-size: 1.05rem; color: var(--onyx); }
+.footer-title {
+  font-weight: 700;
+  font-size: 1.05rem;
+  letter-spacing: 0.03em;
+  background: linear-gradient(90deg, #002745, #2A6F97);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
 
 /* --------------------------------------------------------------------------
    GLASS CARD
@@ -198,19 +206,24 @@ button { font-family: inherit; cursor: pointer; }
 
 .hero-title {
   font-size: clamp(2.1rem, 5.4vw, 3.5rem);
-  font-weight: 800;
+  font-weight: 700;
   line-height: 1.12;
   margin: 0 auto 22px;
   max-width: 16ch;
   color: var(--text);
+  background: linear-gradient(90deg, #ffffff, #A9D6E5);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
 }
 
 .hero-title .accent { color: var(--sky); }
 
 .hero-badge {
   display: inline-block;
-  padding: 8px 22px;
-  border-radius: 999px;
+  padding: 10px 22px;
+  border-radius: 900px;
   font-size: 0.9rem;
   font-weight: 600;
   color: var(--onyx);
@@ -795,6 +808,15 @@ button { font-family: inherit; cursor: pointer; }
 
 .admin-actions {
   flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 10px;
+}
+
+.admin-actions .card-link { margin-top: 0; }
+
+.admin-action-row {
   display: flex;
   align-items: center;
   gap: 16px;

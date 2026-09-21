@@ -36,18 +36,17 @@
     </div>
 
     <ul class="admin-list" id="eventList">
-      <li class="state-block state-loading" style="grid-column:auto; list-style:none"><div class="state-icon"></div><p class="state-msg">Memuat data...</p></li>
+      <li class="state-block state-loading" style="grid-column:auto; list-style:none"><div class="state-icon"></div><p class="state-msg">Loading data...</p></li>
     </ul>
   </main>
 
-  <!-- Delete confirmation modal -->
   <div class="modal-overlay" id="deleteModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
     <div class="modal-card">
       <h2 id="modalTitle">Delete event?</h2>
       <p>Are you sure you want to delete this event? This action cannot be undone.</p>
       <div class="modal-actions">
-        <button class="btn btn-outline" id="modalNo" type="button">No</button>
-        <button class="btn btn-dark" id="modalYes" type="button">Yes</button>
+        <button class="btn btn-dark" id="modalNo" type="button">No</button>
+        <button class="btn btn-outline" id="modalYes" type="button">Yes</button>
       </div>
     </div>
   </div>

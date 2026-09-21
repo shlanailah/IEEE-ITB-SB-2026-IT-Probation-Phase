@@ -9,7 +9,7 @@
 (function () {
   'use strict';
 
-  var PER_PAGE = 6;
+  var PER_PAGE = 8;
 
   document.addEventListener('DOMContentLoaded', function () {
     app.renderNavbar('events');

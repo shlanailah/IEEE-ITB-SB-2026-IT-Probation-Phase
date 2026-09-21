@@ -12,6 +12,13 @@
     var titleEl = document.getElementById('detailTitle');
     var id = app.getParam('id');
 
+    var backBtn = document.getElementById('backBtn');
+    if (backBtn) {
+      var isAdmin = app.getParam('from') === 'admin';
+      backBtn.href = isAdmin ? '../admin/dashboard.html' : 'events.html';
+      backBtn.setAttribute('aria-label', isAdmin ? 'Kembali ke dashboard' : 'Kembali ke daftar event');
+    }
+
     if (!id) {
       titleEl.textContent = 'Event tidak ditemukan';
       app.renderState(zone, 'empty', 'Event tidak ditemukan',

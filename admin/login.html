@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Admin Login — IEEE ITB</title>
+  <title>Admin Login</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -13,19 +13,19 @@
   <main class="auth-wrap">
     <div class="auth-box glass-card">
       <h1>Admin Login</h1>
-      <p class="auth-sub">Masuk untuk mengelola event</p>
+      <p class="auth-sub">Sign in to manage events</p>
 
       <form id="loginForm" novalidate>
         <div class="field">
           <label class="field-label" for="email">Email</label>
-          <input class="input" type="email" id="email" name="email" placeholder="admin@ieeeitb.org" autocomplete="email" required>
-          <p class="field-error" id="errEmail">Email tidak valid.</p>
+          <input class="input" type="email" id="email" name="email" placeholder="admin@gmail.com" autocomplete="email" required>
+          <p class="field-error" id="errEmail">Email is invalid.</p>
         </div>
 
         <div class="field">
           <label class="field-label" for="password">Password</label>
-          <input class="input" type="password" id="password" name="password" placeholder="Masukkan password" autocomplete="current-password" minlength="6" required>
-          <p class="field-error" id="errPassword">Password minimal 6 karakter.</p>
+          <input class="input" type="password" id="password" name="password" placeholder="Insert password" autocomplete="current-password" minlength="6" required>
+          <p class="field-error" id="errPassword">Password must be at least 6 characters.</p>
         </div>
 
         <button class="btn btn-outline" type="submit" id="loginBtn">Login</button>
