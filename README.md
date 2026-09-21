@@ -27,7 +27,7 @@ Public pages:
 Admin pages (`admin/`):
 
 - **Login** (`login.html`) — email/password authentication via Supabase Auth, with form validation and friendly error messages.
-- **Dashboard** (`dashboard.html`) — statistics (total / upcoming / past), filter tabs (All / Upcoming / Past), multi-event selection, and batch delete with a confirmation modal.
+- **Dashboard** (`dashboard.html`) — statistics (total / upcoming / past), filter tabs (All / Upcoming / Past), and per-event delete via a trash icon button that opens a neutral confirmation popup.
 - **Event Form** (`event-form.html`) — add a new event or edit an existing one (`?id=` for edit), with per-field validation and toast feedback.
 
 Backend & system:
@@ -122,7 +122,7 @@ Full setup using the Supabase SQL Editor (run in order, once):
 
 1. Open **Supabase Dashboard → SQL Editor**.
 2. Run **`supabase/schema.sql`** — creates `public.profiles` & `public.events`, the `updated_at` trigger, and all RLS policies plus the `public.is_admin()` function.
-3. Run **`supabase/seed.sql`** — inserts 6 sample events (3 upcoming, 3 past) with dates relative to `current_date`.
+3. Run **`supabase/seed.sql`** — inserts 6 sample events (3 upcoming, 3 past) with dates relative to `current_date`. Seed is **idempotent**: re-running it skips existing events thanks to the unique `events_dedup_idx` on `(title, date, time, location)`, so events never appear twice.
 
 Schema summary:
 

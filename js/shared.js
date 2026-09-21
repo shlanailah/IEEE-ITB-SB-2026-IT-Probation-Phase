@@ -212,10 +212,11 @@
       '    <p class="admin-sub">\uD83D\uDCCD ' + app.esc(ev.location) + '</p>' +
       '  </div>' +
       '  <div class="admin-actions">' +
-      '    <label class="checkbox-wrap" title="Pilih untuk dihapus">' +
-      '      <input type="checkbox" class="row-check" aria-label="Pilih ' + app.esc(ev.title) + '">' +
-      '      <span class="checkbox-target"></span>' +
-      '    </label>' +
+      '    <button class="icon-btn icon-btn-delete" type="button" data-delete="' + app.esc(ev.id) + '" title="Delete event" aria-label="Delete ' + app.esc(ev.title) + '">' +
+      '      <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">' +
+      '        <path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M4 7h16M9 7V4.5h6V7M6.5 7l.9 12.5h9.2L17.5 7M10 11l4 4M14 11l-4 4"/>' +
+      '      </svg>' +
+      '    </button>' +
       '    <a class="icon-btn" href="event-form.html?id=' + encodeURIComponent(ev.id) + '" title="Edit event" aria-label="Edit">' +
       '      <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a1 1 0 0 0 0-1.41l-2.34-2.34a1 1 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>' +
       '    </a>' +

@@ -25,6 +25,7 @@
     if (editId) {
       formTitle.textContent = 'Edit event';
       submitBtn.textContent = 'Save changes';
+      form.classList.add('is-hidden');
       loadEvent(editId);
     }
 
@@ -62,15 +63,17 @@
     });
 
     function loadEvent(id) {
-      var zone = document.getElementById('formContainer');
-      app.showLoading(zone, 'Memuat event...');
+      var loadingZone = document.getElementById('formLoading');
+      app.showLoading(loadingZone, 'Memuat event...');
       app.getEvent(id).then(function (res) {
         if (res.error || !res.data) {
-          form.innerHTML =
+          loadingZone.innerHTML =
             app.stateBlock('error', 'Gagal memuat event', res.error || 'Event tidak ditemukan.',
               function () { window.location.replace('dashboard.html'); });
           return;
         }
+        loadingZone.innerHTML = '';
+        form.classList.remove('is-hidden');
         fillForm(res.data);
       });
     }

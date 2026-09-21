@@ -33,12 +33,10 @@
     var statsEl = document.getElementById('statsZone');
     var allEvents = [];
     var currentFilter = 'all';
-    var checkedIds = {};
 
     var tabBtns = Array.prototype.slice.call(document.querySelectorAll('#filterTabs .tab'));
-    var selectionBar = document.getElementById('selectionBar');
-    var selectionCount = document.getElementById('selectionCount');
     var deleteModal = document.getElementById('deleteModal');
+    var pendingDeleteId = null;
 
     tabBtns.forEach(function (btn) {
       btn.addEventListener('click', function () {
@@ -47,11 +45,6 @@
         currentFilter = btn.getAttribute('data-filter');
         renderList();
       });
-    });
-
-    document.getElementById('clearSelectionBtn').addEventListener('click', function () {
-      checkedIds = {};
-      renderList();
     });
 
     document.getElementById('modalNo').addEventListener('click', closeModal);
@@ -110,35 +103,27 @@
       }
 
       listEl.innerHTML = rows.map(function (ev) {
-        return app.adminRowHTML(ev)
-          .replace('<input type="checkbox" class="row-check"',
-            '<input type="checkbox" class="row-check" ' + (checkedIds[ev.id] ? 'checked' : ''));
+        return app.adminRowHTML(ev);
       }).join('');
 
-      bindChecks();
-      updateSelectionBar();
+      bindDelete();
     }
 
-    function bindChecks() {
-      var checks = listEl.querySelectorAll('.row-check');
-      checks.forEach(function (checkbox) {
-        checkbox.addEventListener('change', function () {
-          var row = checkbox.closest('.admin-item');
-          var id = row.getAttribute('data-id');
-          if (checkbox.checked) checkedIds[id] = true;
-          else delete checkedIds[id];
-          updateSelectionBar();
+    function bindDelete() {
+      var btns = listEl.querySelectorAll('[data-delete]');
+      btns.forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          pendingDeleteId = btn.getAttribute('data-delete');
+          openModal();
         });
       });
     }
 
-    function updateSelectionBar() {
-      var ids = Object.keys(checkedIds);
-      selectionBar.classList.toggle('show', ids.length > 0);
-      selectionCount.textContent = ids.length + (ids.length === 1 ? ' event selected' : ' events selected');
-    }
-
     function openModal() {
+      document.getElementById('modalTitle').textContent = 'Delete event?';
+      var p = deleteModal.querySelector('p');
+      p.textContent = 'Are you sure you want to delete this event? This action cannot be undone.';
+      document.getElementById('modalYes').disabled = false;
       deleteModal.classList.add('is-open');
       document.body.style.overflow = 'hidden';
     }
@@ -149,8 +134,7 @@
     }
 
     function confirmDelete() {
-      var ids = Object.keys(checkedIds);
-      if (ids.length === 0) {
+      if (!pendingDeleteId) {
         closeModal();
         return;
       }
@@ -161,25 +145,17 @@
       p.textContent = 'Please wait a moment.';
       document.getElementById('modalYes').disabled = true;
 
-      app.deleteEvents(ids).then(function (res) {
+      app.deleteEvents([pendingDeleteId]).then(function (res) {
         document.getElementById('modalYes').disabled = false;
         closeModal();
+        pendingDeleteId = null;
         if (res.error) {
           app.toast(res.error, 'error');
           return;
         }
-        app.toast(ids.length === 1 ? 'Event deleted.' : ids.length + ' events deleted.', 'success');
-        checkedIds = {};
+        app.toast('Event deleted.');
         loadEvents();
       });
     }
-
-    document.getElementById('deleteSelectedBtn').addEventListener('click', function () {
-      if (Object.keys(checkedIds).length === 0) {
-        app.toast('Pilih setidaknya satu event terlebih dahulu.', 'info');
-        return;
-      }
-      openModal();
-    });
   }
 })();

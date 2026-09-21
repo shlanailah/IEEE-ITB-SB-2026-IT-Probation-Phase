@@ -56,6 +56,8 @@ button { font-family: inherit; cursor: pointer; }
 
 .page { padding: 28px 0 72px; }
 
+.home-main { padding-bottom: 72px; }
+
 /* --------------------------------------------------------------------------
    NAVBAR (floating rounded glass pill)
    -------------------------------------------------------------------------- */
@@ -454,11 +456,6 @@ button { font-family: inherit; cursor: pointer; }
   color: var(--text);
 }
 
-.btn-danger {
-  background: linear-gradient(180deg, #ffb3ab, #ff7d72);
-  color: #3a0d0a;
-}
-
 .btn .spinner {
   width: 16px;
   height: 16px;
@@ -472,6 +469,10 @@ button { font-family: inherit; cursor: pointer; }
    FORMS
    -------------------------------------------------------------------------- */
 .form-card { padding: 34px 38px; }
+
+.is-hidden { display: none !important; }
+
+.form-loading { margin-bottom: 0; }
 
 .field { margin-bottom: 20px; }
 
@@ -544,7 +545,6 @@ button { font-family: inherit; cursor: pointer; }
 .form-grid .full { grid-column: 1 / -1; }
 
 .form-actions { margin-top: 28px; }
-.form-hint { margin: 14px 6px 0; font-size: 0.85rem; color: var(--muted); }
 
 /* --------------------------------------------------------------------------
    FILTER TABS
@@ -667,39 +667,6 @@ button { font-family: inherit; cursor: pointer; }
   gap: 16px;
 }
 
-/* custom checkbox */
-.checkbox-wrap { position: relative; display: inline-flex; }
-
-.checkbox-wrap input { position: absolute; opacity: 0; width: 0; height: 0; }
-
-.checkbox-target {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 26px;
-  height: 26px;
-  border-radius: 9px;
-  border: 2px solid rgba(255, 255, 255, 0.6);
-  background: transparent;
-  transition: background 0.2s, border-color 0.2s;
-}
-
-.checkbox-wrap input:checked + .checkbox-target {
-  background: linear-gradient(180deg, var(--blue-400), var(--blue-500));
-  border-color: transparent;
-}
-
-.checkbox-wrap input:checked + .checkbox-target::after {
-  content: '';
-  width: 6px;
-  height: 11px;
-  border: solid var(--onyx);
-  border-width: 0 2.5px 2.5px 0;
-  transform: rotate(45deg) translateY(-1px);
-}
-
-.checkbox-wrap input:focus-visible + .checkbox-target { box-shadow: 0 0 0 4px rgba(168, 212, 232, 0.35); }
-
 .icon-btn {
   display: inline-flex;
   align-items: center;
@@ -715,20 +682,9 @@ button { font-family: inherit; cursor: pointer; }
 
 .icon-btn:hover { background: rgba(255, 255, 255, 0.16); }
 
+.icon-btn-delete:hover { background: rgba(255, 255, 255, 0.16); }
+
 .dashboard-toolbar { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; margin-top: 26px; }
-
-.selection-bar {
-  display: none;
-  align-items: center;
-  gap: 14px;
-  margin-top: 18px;
-  padding: 12px 18px;
-  border-radius: 18px;
-}
-
-.selection-bar.show { display: flex; }
-
-.selection-count { font-weight: 600; font-size: 0.92rem; color: var(--sky); }
 
 /* --------------------------------------------------------------------------
    MODAL (delete confirmation)

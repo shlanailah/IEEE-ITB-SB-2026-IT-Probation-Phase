@@ -60,4 +60,5 @@ values
         'Lab Robotika ITB',
         'past',
         'https://picsum.photos/seed/ieee-robotics/800/450'
-    );
+    )
+on conflict (title, date, time, location) do nothing;

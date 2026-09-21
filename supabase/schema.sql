@@ -41,6 +41,10 @@ comment on table public.events is 'Events managed by the admin team';
 create index if not exists events_status_idx on public.events (status);
 create index if not exists events_date_idx   on public.events (date desc);
 
+-- Prevents duplicate rows with the same event signature (e.g. re-running seed.sql
+-- or importing a title+date+time+location that already exists).
+create unique index if not exists events_dedup_idx on public.events (title, date, time, location);
+
 -- Keep updated_at fresh on every update (backend-level bookkeeping).
 create or replace function public.touch_updated_at()
 returns trigger
