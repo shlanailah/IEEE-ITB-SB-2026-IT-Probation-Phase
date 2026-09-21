@@ -1,12 +1,9 @@
-// ============================================================================
-// PAGE: Admin Login
-// ============================================================================
 (function () {
   'use strict';
 
   document.addEventListener('DOMContentLoaded', function () {
     if (!window.supabaseConfigured()) {
-      app.toast('Supabase belum dikonfigurasi. Isi js/config.js.', 'error');
+      app.toast('Supabase is not configured. Please fill in js/config.js.', 'error');
     }
 
     app.getSession().then(function (session) {

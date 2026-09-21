@@ -1,14 +1,11 @@
-// ============================================================================
-// SHARED UI HELPERS — navbar/footer injection, toasts, states, carousel,
-// formatters and reusable templates.
-// Exposes everything on window.app
-// ============================================================================
+//formatters and reusable templates (navbar/footer, toasts, states, carousel)
+
 (function () {
   'use strict';
 
   var app = window.app = window.app || {};
 
-  // ----------------------------- Helpers -----------------------------------
+  //Helpers
   app.esc = function (str) {
     if (str === null || str === undefined) return '';
     return String(str)
@@ -30,7 +27,7 @@
     return new URLSearchParams(window.location.search).get(name);
   };
 
-  // Simple sessionStorage JSON cache keyed by (key) with a max age.
+  //Simple sessionStorage JSON cache keyed by (key) with a max age.
   app.cacheSet = function (key, value) {
     try {
       sessionStorage.setItem(key, JSON.stringify({ t: Date.now(), v: value }));
@@ -75,11 +72,11 @@
     img.src = 'data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==';
   };
 
-  // --------------------------- Navbar & Footer ------------------------------
+  //Navbar & Footer 
   var NAV_LINKS = [
     { key: 'home',    label: 'Home',  href: 'index.html' },
     { key: 'about',   label: 'About', href: 'about.html' },
-    { key: 'events',  label: 'Event', href: 'events.html' }
+    { key: 'events',  label: 'Events', href: 'events.html' }
   ];
 
   app.renderNavbar = function (activeKey) {
@@ -123,7 +120,7 @@
       '</footer>';
   };
 
-  // ------------------------------ Toast ------------------------------------
+  //Toast 
   var toastRoot = null;
   function ensureToastRoot() {
     if (!toastRoot) {
@@ -147,11 +144,11 @@
     }, 3200);
   };
 
-  // ------------------------- State placeholders -----------------------------
+  //State
   app.stateBlock = function (type, title, message, retryFn) {
     var icon = { loading: '', empty: '\uD83D\uDCCB', error: '\u26A0\uFE0F', info: '\u2139\uFE0F' }[type] || '';
     var btn = retryFn
-      ? '<button class="btn btn-ghost state-retry" type="button">Coba lagi</button>'
+      ? '<button class="btn btn-ghost state-retry" type="button">Try again</button>'
       : '';
     return (
       '<div class="state-block state-' + type + '" role="status">' +
@@ -173,10 +170,10 @@
   };
 
   app.showLoading = function (el, message) {
-    app.renderState(el, 'loading', message || 'Memuat data...');
+    app.renderState(el, 'loading', message || 'Load data...');
   };
 
-  // ------------------------------ Templates ---------------------------------
+  //Templates 
   app.eventCardHTML = function (ev, opts) {
     opts = opts || {};
     var loadAttr = opts.eager ? 'eager' : 'lazy';
@@ -227,10 +224,8 @@
     );
   };
 
-  // ------------------------------ Carousel ----------------------------------
-  // 2 cards per slide (1 on mobile), numbered circular pagination.
+  //Carousel (2 cards per slide (1 on mobile), numbered circular pagination)
   app.renderCarouselZone = function (container, options) {
-    // options: { data, title (unused), emptyTitle, emptyMsg, onError }
     if (!container) return;
 
     if (options.loading) {
@@ -261,7 +256,7 @@
 
     if (!options.data || options.data.length === 0) {
       app.renderState(container, 'empty', options.emptyTitle || 'Belum ada event',
-        options.emptyMsg || 'Event akan tampil di sini setelah ditambahkan.');
+        options.emptyMsg || 'Events will appear here once added.');
       return;
     }
 
@@ -271,11 +266,11 @@
 
     container.innerHTML =
       '<div class="car">' +
-      '  <button class="car-btn" data-carousel-prev aria-label="Sebelumnya">\u2039</button>' +
+      '  <button class="car-btn" data-carousel-prev aria-label="Previous">\u2039</button>' +
       '  <div class="car-viewport">' +
       '    <div class="car-track" data-carousel-track>' + slides + '</div>' +
       '  </div>' +
-      '  <button class="car-btn" data-carousel-next aria-label="Berikutnya">\u203A</button>' +
+      '  <button class="car-btn" data-carousel-next aria-label="Next">\u203A</button>' +
       '  <div class="car-pager" data-carousel-pager></div>' +
       '</div>';
 
@@ -306,7 +301,7 @@
       var html = '';
       for (var i = 0; i < count; i++) {
         var active = i === index ? ' is-active' : '';
-        html += '<button class="car-dot' + active + '" type="button" aria-label="Halaman ' + (i + 1) + '">' + (i + 1) + '</button>';
+        html += '<button class="car-dot' + active + '" type="button" aria-label="Page ' + (i + 1) + '">' + (i + 1) + '</button>';
       }
       pager.innerHTML = html;
       Array.prototype.forEach.call(pager.children, function (dot, i) {
@@ -335,13 +330,10 @@
     measure();
   };
 
-  // ------------------------ Page transitions (fade) ---------------------------
+  //Page transitions (fade) 
   var REDUCED_MOTION = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
   var TRANSITION_MS = 260;
 
-  // Fade the page in after everything (fonts/images) finished loading.
-  // The double requestAnimationFrame guarantees an opacity:0 frame is painted
-  // first so the CSS transition actually animates instead of jumping to 1.
   window.addEventListener('load', function () {
     requestAnimationFrame(function () {
       requestAnimationFrame(function () {
@@ -350,8 +342,8 @@
     });
   });
 
-  // True when a link should use the fade transition: an internal relative
-  // navigation to another .html page on the same origin.
+  //True when a link should use the fade transition
+  //navigation to another .html page on the same origin.
   app.isSmoothLink = function (a) {
     var href = a.getAttribute('href');
     if (!href || a.hasAttribute('download')) return false;
@@ -366,7 +358,7 @@
     return /\.html(\?|#|$)/.test(href);
   };
 
-  // Intercept internal link clicks: fade out first, then navigate.
+  //internal link clicks: fade out first, then navigate.
   document.addEventListener('click', function (e) {
     if (e.defaultPrevented || e.button !== 0) return;
     if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;

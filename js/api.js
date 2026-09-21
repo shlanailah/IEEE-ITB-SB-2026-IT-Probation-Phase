@@ -1,7 +1,5 @@
-// ============================================================================
-// DATA LAYER — Supabase client wrapper (auth + events CRUD)
-// Exposes everything on window.app
-// ============================================================================
+//Supabase client wrapper (auth + events CRUD)
+
 (function () {
   'use strict';
 
@@ -20,30 +18,30 @@
   function friendlyError(error) {
     if (!error) return null;
     if (error.message === 'Cfg') {
-      return 'Supabase belum dikonfigurasi. Isi URL & anon key di js/config.js.';
+      return 'Supabase is not configured. Fill in the URL & anon key in js/config.js.';
     }
     if (/invalid login credentials/i.test(error.message)) {
-      return 'Email atau password salah.';
+      return 'Incorrect email or password.';
     }
     if (/email.*not confirmed/i.test(error.message)) {
-      return 'Email belum dikonfirmasi. Cek inbox email kamu.';
+      return 'Email not confirmed. Please check your inbox.';
     }
     if (/row-level security/i.test(error.message)) {
-      return 'Kamu tidak punya izin untuk melakukan operasi ini.';
+      return 'You do not have permission to perform this operation.';
     }
     if (/new row violates/i.test(error.message)) {
-      return 'Data tidak valid: periksa kembali input kamu.';
+      return 'Invalid data: please check your input.';
     }
     if (/network|fetch|load failed/i.test(error.message)) {
-      return 'Gagal terhubung ke server. Periksa koneksi internet.';
+      return 'Failed to connect to the server. Please check your internet connection.';
     }
     if (/JWT|auth/i.test(error.message)) {
-      return 'Sesi login bermasalah. Silakan login ulang.';
+      return 'Your session is invalid. Please log in again.';
     }
-    return error.message || 'Terjadi kesalahan.';
+    return error.message || 'Something went wrong.';
   }
 
-  // ------------------------------- AUTH -----------------------------------
+  //AUTH
   app.getSession = async function () {
     try {
       var res = await client().auth.getSession();
@@ -53,9 +51,7 @@
     }
   };
 
-  // ------------------------------- STORAGE ---------------------------------
-  // Uploads an image file to the "event-images" Supabase Storage bucket and
-  // returns the public URL. Requires the storage set-up in supabase/storage.sql.
+  //STORAGE SQL (upload image)
   app.uploadEventImage = async function (file, eventId) {
     try {
       var sb = client();
@@ -115,7 +111,7 @@
     return await app.getProfile(session.user.id);
   };
 
-  // Guard used on protected admin pages: redirect to login when signed out.
+  //Guard used on protected admin pages: redirect to login when signed out.
   app.requireAdmin = async function (redirectTo) {
     var session = await app.getSession();
     if (!session) {
@@ -125,7 +121,7 @@
     return session;
   };
 
-  // ------------------------------- EVENTS ----------------------------------
+  //EVENTS DATABASE
   app.listEvents = async function (statusFilter) {
     // statusFilter: undefined/"all" | "upcoming" | "past"
     try {
@@ -193,8 +189,6 @@
     }
   };
 
-  // Orchestrates validation -> persistence so a single call handles
-  // create vs update transparently. Returns { data, error }.
   app.saveEvent = async function (event) {
     var payload = {
       title: event.title.trim(),
@@ -213,7 +207,6 @@
     return await app.createEvent(payload);
   };
 
-  // Shared client-side validation (mirrors the DB constraints / check rules).
   app.validateEvent = function (ev) {
     if (!ev.title || !ev.title.trim()) return { error: 'Event name is required' };
     if (!ev.description || ev.description.trim().length < 10) {

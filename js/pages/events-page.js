@@ -1,11 +1,3 @@
-// ============================================================================
-// PAGE: User Events (list)
-// - Client-side search (name / place / description)
-// - Status filter tabs: All / Upcoming / Past
-// - Pagination (PER_PAGE cards per page)
-// Reuses the shared data layer (app.listEvents) + card template
-// (app.eventCardHTML) so the UI stays consistent everywhere.
-// ============================================================================
 (function () {
   'use strict';
 
@@ -48,10 +40,10 @@
     loadEvents();
 
     function loadEvents() {
-      app.renderState(zone, 'loading', 'Memuat event...');
+      app.renderState(zone, 'loading', 'Load event...');
       app.listEvents('all').then(function (res) {
         if (res.error) {
-          app.renderState(zone, 'error', 'Gagal memuat event', res.error, loadEvents);
+          app.renderState(zone, 'error', 'Failed to load event', res.error, loadEvents);
           return;
         }
         allEvents = res.data || [];
@@ -88,12 +80,12 @@
       if (count === 0) {
         pagerEl.innerHTML = '';
         if (!allEvents.length) {
-          app.renderState(zone, 'empty', 'Belum ada event',
-            'Event akan tampil di sini setelah ditambahkan oleh admin.');
+          app.renderState(zone, 'empty', 'No events yet',
+            'Events will appear here once added by an admin.');
           return;
         }
-        app.renderState(zone, 'empty', 'Tidak ada event yang cocok',
-          'Coba ubah kata kunci pencarian atau filter kamu.');
+        app.renderState(zone, 'empty', 'No matching events',
+          'Try changing your search keyword or filter.');
         return;
       }
 

@@ -1,6 +1,3 @@
-// ============================================================================
-// PAGE: User Event Detail
-// ============================================================================
 (function () {
   'use strict';
 
@@ -16,13 +13,13 @@
     if (backBtn) {
       var isAdmin = app.getParam('from') === 'admin';
       backBtn.href = isAdmin ? '../admin/dashboard.html' : 'events.html';
-      backBtn.setAttribute('aria-label', isAdmin ? 'Kembali ke dashboard' : 'Kembali ke daftar event');
+      backBtn.setAttribute('aria-label', isAdmin ? 'Back to dashboard' : 'Back to event list');
     }
 
     if (!id) {
-      titleEl.textContent = 'Event tidak ditemukan';
-      app.renderState(zone, 'empty', 'Event tidak ditemukan',
-        'Tidak ada ID event. Coba buka dari daftar event.',
+      titleEl.textContent = 'Event not found';
+      app.renderState(zone, 'empty', 'Event not found',
+        'No event ID found. Please open it from the event list.',
         function () { window.location.href = 'events.html'; });
       return;
     }
@@ -30,18 +27,18 @@
     loadEvent();
 
     function loadEvent() {
-      app.showLoading(zone, 'Memuat detail event...');
+      app.showLoading(zone, 'Loading event details...');
       app.getEvent(id).then(function (res) {
         if (res.error) {
-          titleEl.textContent = 'Gagal memuat event';
-          app.renderState(zone, 'error', 'Gagal memuat event', res.error, loadEvent);
+          titleEl.textContent = 'Failed to load event';
+          app.renderState(zone, 'error', 'Failed to load event', res.error, loadEvent);
           return;
         }
         var ev = res.data;
         if (!ev) {
-          titleEl.textContent = 'Event tidak ditemukan';
-          app.renderState(zone, 'empty', 'Event tidak ditemukan',
-            'Event mungkin telah dihapus.',
+          titleEl.textContent = 'Event not found';
+          app.renderState(zone, 'empty', 'Event not found',
+            'The event may have been deleted.',
             function () { window.location.href = 'events.html'; });
           return;
         }

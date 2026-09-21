@@ -1,6 +1,3 @@
-// ============================================================================
-// PAGE: Admin Add / Edit Event
-// ============================================================================
 (function () {
   'use strict';
 
@@ -109,11 +106,11 @@
 
     function loadEvent(id) {
       var loadingZone = document.getElementById('formLoading');
-      app.showLoading(loadingZone, 'Memuat event...');
+      app.showLoading(loadingZone, 'Load event...');
       app.getEvent(id).then(function (res) {
         if (res.error || !res.data) {
           loadingZone.innerHTML =
-            app.stateBlock('error', 'Gagal memuat event', res.error || 'Event tidak ditemukan.',
+            app.stateBlock('error', 'Failed to load event', res.error || 'Event not found.',
               function () { window.location.replace('dashboard.html'); });
           return;
         }

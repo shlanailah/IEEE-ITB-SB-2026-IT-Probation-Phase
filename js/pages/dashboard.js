@@ -1,6 +1,3 @@
-// ============================================================================
-// PAGE: Admin Dashboard
-// ============================================================================
 (function () {
   'use strict';
 
@@ -57,10 +54,10 @@
     loadEvents();
 
     function loadEvents() {
-      app.renderState(listEl, 'loading', 'Memuat data...');
+      app.renderState(listEl, 'loading', 'Loading data...');
       app.listEvents('all').then(function (res) {
         if (res.error) {
-          app.renderState(listEl, 'error', 'Gagal memuat data', res.error, loadEvents);
+          app.renderState(listEl, 'error', 'Failed to load data', res.error, loadEvents);
           return;
         }
         allEvents = res.data || [];
@@ -96,9 +93,9 @@
       var rows = filtered();
 
       if (rows.length === 0) {
-        app.renderState(listEl, 'empty', 'Tidak ada event',
-          currentFilter === 'all' ? 'Klik "+ Add new event" untuk membuat event pertama.'
-                                   : 'Tidak ada event dengan filter ini.');
+        app.renderState(listEl, 'empty', 'No events',
+          currentFilter === 'all' ? 'Click "+ Add new event" to create your first event.'
+                                   : 'No events match this filter.');
         return;
       }
 

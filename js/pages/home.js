@@ -1,8 +1,3 @@
-// ============================================================================
-// PAGE: User Home
-// - Shows cached events instantly when available, then silently refreshes.
-// - First paint shows a clean shimmer skeleton, never an empty container.
-// ============================================================================
 (function () {
   'use strict';
 
@@ -33,7 +28,7 @@
         if (!app.cacheGet(CACHE_KEY, CACHE_AGE)) {
           app.renderCarouselZone(zone, {
             error: res.error,
-            emptyTitle: 'Gagal memuat event',
+            emptyTitle: 'Failed to load event',
             onRetry: fetchUpcoming
           });
         }
