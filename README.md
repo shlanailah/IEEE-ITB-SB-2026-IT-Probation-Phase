@@ -2,11 +2,11 @@ This is a website to publish and manage organizational events. Built with **HTML
 
 ---
 
-## What Can This Website Do?
+## 1. What Can This Website Do?
 
 The site has **two sides**:
 
-### Public Side (no login required)
+### 1.1 Public Side (no login required)
 
 - **Home**: landing page with a hero section and an *Upcoming Events* carousel
 - **About**: a short profile of the organization
@@ -16,7 +16,7 @@ The site has **two sides**:
   - Pagination to split the list into multiple pages
 - **Event Detail**: full event info (date, time, location, description, image)
 
-### Admin Side (login required)
+### 1.2 Admin Side (login required)
 
 - **Login**: sign in with email & password
 - **Dashboard**: event stats (total / upcoming / past), filter tabs, and delete event
@@ -24,7 +24,7 @@ The site has **two sides**:
 
 ---
 
-## How It Works (Short Version)
+## 2. How It Works 
 
 This website **does not have its own server**. All data lives in **Supabase** (a free hosted database service). Here's the flow:
 
@@ -37,7 +37,7 @@ Validation runs on **two layers**: in the browser (so users get instant feedback
 
 ---
 
-## Tech Stack
+## 3. Tech Stack
 
 | Technology | Purpose |
 |---|---|
@@ -50,14 +50,14 @@ Validation runs on **two layers**: in the browser (so users get instant feedback
 
 ---
 
-## Running It Locally
+## 4. Running It Locally
 
-### Requirements
+### 4.1 Requirements
 
 - A [Supabase](https://supabase.com) account 
 - Node.js (optional, only if you want to use `npx serve`)
 
-### Steps
+### 4.2 Steps
 
 **1. Download / clone this project**, then open the folder.
 
@@ -85,7 +85,25 @@ Or open `index.html` directly in a browser (Live Server in VS Code works too).
 
 ---
 
-## Database Setup
+## 5. Environment Configuration
+
+There is a **`.env.example`** file as a template (no sensitive data):
+
+```
+SUPABASE_URL=
+SUPABASE_ANON_KEY=
+```
+
+> **Important:** since this is a static frontend with no build step, `.env` variables are **not read automatically at runtime**. You still need to paste the values manually into `js/config.js`. The `.env.example` file is only for documentation.
+
+**Things to remember:**
+
+- Use the **anon / publishable key**, safe for frontends, access is restricted by RLS
+- **Never** use the `service_role` key in the frontend
+
+---
+
+## 6. Database Setup
 
 All database setup is done in **Supabase Dashboard → SQL Editor**. Run these files **in order, one time only**:
 
@@ -95,7 +113,7 @@ All database setup is done in **Supabase Dashboard → SQL Editor**. Run these f
 | 2 | `supabase/seed.sql` | Inserts 6 sample events (3 upcoming, 3 past) — safe to re-run, won't duplicate |
 | 3 | `supabase/storage.sql` | Creates the `event-images` storage bucket for image uploads |
 
-### Table Overview
+### 6.1 Table Overview
 
 **`profiles`** — admin data:
 
@@ -110,7 +128,7 @@ All database setup is done in **Supabase Dashboard → SQL Editor**. Run these f
 
 ---
 
-## Creating an Admin Account
+## 6.2 Creating an Admin Account
 
 For security reasons, **there is no built-in demo account**. Each environment must create its own.
 
@@ -131,7 +149,7 @@ select id, 'admin', 'admin' from auth.users limit 1;
 
 ---
 
-## Project Structure
+## 7. Project Structure
 
 ```
 ├── index.html              Home page (public)
@@ -161,27 +179,7 @@ select id, 'admin', 'admin' from auth.users limit 1;
 
 ---
 
-## Environment Configuration
-
-There is a **`.env.example`** file as a template (no sensitive data):
-
-```
-SUPABASE_URL=
-SUPABASE_ANON_KEY=
-```
-
-> **Important:** since this is a static frontend with no build step, `.env` variables are **not read automatically at runtime**. You still need to paste the values manually into `js/config.js`. The `.env.example` file is only for documentation.
-
-**Things to remember:**
-
-- Use the **anon / publishable key**, safe for frontends, access is restricted by RLS
-- **Never** use the `service_role` key in the frontend
-
----
-
-## Known Limitations
-
-Things that are **not yet implemented**:
+## 8. Known Issue & Limitations
 
 - **No backend pagination** — all events are fetched at once, not ideal for large datasets
 - **Home cache of 5 minutes** — data may appear slightly stale after an admin change
@@ -192,7 +190,7 @@ Things that are **not yet implemented**:
 
 ---
 
-## Possible Future Improvements
+## 8.1 Possible Future Improvements
 
 Ideas for extending the project:
 
@@ -205,6 +203,8 @@ Ideas for extending the project:
 
 ---
 
-## License & Contribution
-
-This project was built for **IT Probation Phase 2026** at IEEE ITB Student Branch.
+## 9. AI Tools & Applications
+| AI Tool | Used For | 
+|---|---|
+| Claude | UI/UX design to Frontend code |
+| OpenCode | Bug fixing & backend guidance |
