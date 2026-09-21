@@ -1,6 +1,5 @@
 -- ============================================================================
--- IEEE ITB Student Branch — Supabase schema
--- ----------------------------------------------------------------------------
+-- Supabase schema
 -- RUN ORDER: 1) schema.sql  2) seed.sql
 -- Run BOTH in the Supabase SQL Editor (as the postgres role) for your project.
 -- ============================================================================

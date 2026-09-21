@@ -1,6 +1,5 @@
 -- ============================================================================
--- IEEE ITB Student Branch — Supabase Storage set-up for event images
--- ----------------------------------------------------------------------------
+-- Supabase Storage set-up for event images
 -- RUN ONCE, AFTER supabase/schema.sql, in the Supabase SQL Editor (postgres role).
 -- Creates a public bucket "event-images" plus policies so that:
 --   - anyone can READ stored images (public URLs),

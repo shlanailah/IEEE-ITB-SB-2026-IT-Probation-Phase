@@ -1,6 +1,5 @@
 -- ============================================================================
--- IEEE ITB Student Branch — sample events
--- ----------------------------------------------------------------------------
+-- Sample events (dummy)
 -- Run AFTER schema.sql (as the postgres role in the Supabase SQL Editor).
 -- Dates are relative to "today" so Upcoming / Past data always looks realistic.
 -- ============================================================================

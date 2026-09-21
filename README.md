@@ -20,7 +20,7 @@ The site has **two sides**:
 
 - **Login**: sign in with email & password
 - **Dashboard**: event stats (total / upcoming / past), filter tabs, and delete event
-- **Event Form**: add a new event or edit an existing one, with validation, toast feedback, and image upload (max 5MB)
+- **Event Form**: add a new event or edit an existing one, with validation, toast feedback, and image upload
 
 ---
 
@@ -186,7 +186,7 @@ Things that are **not yet implemented**:
 - **No backend pagination** — all events are fetched at once, not ideal for large datasets
 - **Home cache of 5 minutes** — data may appear slightly stale after an admin change
 - **Hardcoded timezone** — time is displayed as `WIB` without converting to the visitor's timezone
-- **No automated tests** — `test.sql` and `tes.js` are still empty stubs
+- **No automated tests** — no test framework or test suite included
 - **No CI/CD**
 - **RLS intentionally allows public read** — do not store sensitive data in the `events` table
 
